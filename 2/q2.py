@@ -14,33 +14,22 @@ astar = tor.tensor([1])
 mu_np = np.random.randn(1)
 log_sigma_np = np.random.randn(1)
 
-# mu_np = [5.0]
-# log_sigma_np = [5.0]
 # True gradient calculation
 
-# mu = tor.tensor(mu_np, requires_grad=True)
-# log_sigma = tor.tensor(log_sigma_np, requires_grad=True)
 mu = tor.tensor(mu_np, requires_grad=True)
 log_sigma = tor.tensor(log_sigma_np, requires_grad=True)
 
-# pol = tor.distributions.MultivariateNormal(mu, tor.diag(tor.exp(log_sigma)))
-# pol.mean.backward(retain_graph=True)
-# true_grad_mean = mu.grad.data
-# pol.variance.backward(retain_graph=True)
-# true_grad_sigma = log_sigma.grad.data
-
-true_obj = -(mu - astar) ** 2 - log_sigma ** 2
+# Taking the gradient with respect to the true objective function calculated in Question 1
+true_obj = -(mu - astar) ** 2 - tor.exp(log_sigma)
 true_obj = - true_obj
 true_obj.backward(retain_graph=True)
-true_grad_mean = mu.grad.data
+true_grad_mean = mu.grad.data.clone()
 true_grad_sigma = log_sigma.grad.data
 
-print(true_grad_mean)
-print(true_grad_sigma)
-# Solution using SGD
+# Calculating sample gradients using stochastic gradient descent
 mu = tor.tensor(mu_np, requires_grad=True)
 log_sigma = tor.tensor(log_sigma_np, requires_grad=True)
-opt = tor.optim.SGD([mu, log_sigma], lr=0.001)
+opt = tor.optim.SGD([mu, log_sigma], lr=0.0005)
 
 # Experiment
 T = 10000
@@ -54,7 +43,27 @@ pol = tor.distributions.MultivariateNormal(mu, tor.diag(tor.exp(log_sigma)))
 for t in range(T):
     # Interaction
     A = pol.sample()
-    R = torch.distributions.Normal(-tor.norm(A - astar) ** 2, 1).sample()
+    R = -tor.norm(A - astar) ** 2 + tor.randn(1)
+
+    # Compute loss
+    sur_obj = pol.log_prob(A) * R
+    loss = -sur_obj
+
+    # Update
+    opt.zero_grad()
+    loss.backward(retain_graph=True)
+
+    # Log
+    grad_mus[t] = mu.grad.data.clone()
+    grad_sigmas[t] = log_sigma.grad.data.clone()
+
+# Optimizing using the objective function to find the solution
+
+for t in range(T):
+    # Interaction
+    pol = tor.distributions.MultivariateNormal(mu, tor.diag(tor.exp(log_sigma)))
+    A = pol.sample()
+    R = -tor.norm(A - astar) ** 2 + tor.randn(1)
 
     # Compute loss
     sur_obj = pol.log_prob(A) * R
@@ -69,14 +78,8 @@ for t in range(T):
     mus[t] = mu.data.clone()
     sigmas[t] = tor.exp(log_sigma.data.clone())
 
-    grad_mus[t] = mu.grad.data.clone()
-    grad_sigmas[t] = log_sigma.grad.data.clone()
-
-# mus = np.cumsum(mus) / np.arange(1, T + 1, 1)
-# sigmas = np.cumsum(sigmas) / np.arange(1, T + 1, 1)
 grad_mean_mus = np.cumsum(grad_mus.numpy()) / np.arange(1, T + 1, 1)
 grad_mean_sigmas = np.cumsum(grad_sigmas.numpy()) / np.arange(1, T + 1, 1)
-
 plt.plot(mus)
 plt.figure()
 plt.plot(sigmas)
