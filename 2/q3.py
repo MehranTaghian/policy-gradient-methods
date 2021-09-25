@@ -11,30 +11,25 @@ np.random.seed(seed)
 # Problem
 act_dim = 1
 astar = tor.tensor([1])
+mu_np = np.random.randn(1)
+sigma_np = np.random.randn(1)
 
-# Solution
-mu = tor.randn(act_dim, requires_grad=True)
-sigma = tor.randn(act_dim, requires_grad=True)
-opt = tor.optim.SGD([mu, sigma], lr=0.01)
+# True gradient calculation
+mu = tor.tensor(mu_np, requires_grad=True)
+sigma = tor.tensor(sigma_np, requires_grad=True)
 
 dist = tor.distributions.Normal(0, 1)
 zeta = dist.sample()
-pol = mu + sigma * zeta
-
-pol.backward(retain_graph=True)
+true_obj = - (mu - astar) ** 2 - sigma ** 2
+true_obj = -true_obj
+true_obj.backward(retain_graph=True)
 true_grad_mean = mu.grad.data
-mu.grad.data.zero_()
 true_grad_sigma = sigma.grad.data
-sigma.grad.data.zero_()
 
-# dist = tor.distributions.MultivariateNormal(mu, tor.diag(tor.exp(sigma)))
-#
-# dist.mean.backward(retain_graph=True)
-# true_grad_mean = mu.grad.data
-# mu.grad.data.zero_()
-# dist.variance.backward(retain_graph=True)
-# true_grad_sigma = sigma.grad.data
-# sigma.grad.data.zero_()
+# Solution using stochastic gradient descent
+mu = tor.tensor(mu_np, requires_grad=True)
+sigma = tor.tensor(sigma_np, requires_grad=True)
+opt = tor.optim.SGD([mu, sigma], lr=0.01)
 
 # Experiment
 T = 10000
@@ -45,17 +40,10 @@ grad_sigmas = tor.zeros(T, act_dim)
 
 for t in range(T):
     # Interaction
-    # pol = tor.distributions.MultivariateNormal(mu, tor.diag(tor.exp(log_sigma)))
-    # A = pol.rsample()
-    # R = -tor.norm(A - astar) ** 2 + tor.randn(1)
-    #
-    # # Compute loss
-    # sur_obj = pol.log_prob(A) * R
-    # loss = -sur_obj
-
     dist = tor.distributions.Normal(0, 1)
     zeta = dist.sample()
     A = mu + sigma * zeta
+    # R = torch.distributions.Normal(-tor.norm(A - astar) ** 2, 1).sample()
     R = -tor.norm(A - astar) ** 2 + tor.randn(1)
 
     # Compute loss
@@ -75,6 +63,8 @@ for t in range(T):
     grad_mus[t] = mu.grad.data.clone()
     grad_sigmas[t] = sigma.grad.data.clone()
 
+# grad_mean_mus = grad_mus
+# grad_mean_sigmas = grad_sigmas
 grad_mean_mus = np.cumsum(grad_mus.numpy()) / np.arange(1, T + 1, 1)
 grad_mean_sigmas = np.cumsum(grad_sigmas.numpy()) / np.arange(1, T + 1, 1)
 
