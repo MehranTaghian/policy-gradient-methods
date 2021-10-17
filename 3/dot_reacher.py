@@ -112,10 +112,11 @@ class ActorCritic:
         step = 0
         episode = 0
         trajectories = []
+        episode_lengths = []
         while step < self.num_steps:
             done = False
             I = 1
-            prior_steps = step
+            prior_step = step
             state = self.env.reset()
             state = torch.tensor(state, dtype=torch.float32, device=self.device)
             trajectory = []
@@ -127,7 +128,7 @@ class ActorCritic:
                 reward = torch.tensor(reward, dtype=torch.float32, device=self.device)
                 step += 1
 
-                v_next = self.critic(next_state).detach() if not done else 0
+                v_next = self.critic(next_state).detach() if not done else 0.0
                 delta = reward + self.gamma * v_next - self.critic(state)
                 critic_loss = 1 / 2 * delta ** 2
                 self.critic_opt.zero_grad()
@@ -146,11 +147,15 @@ class ActorCritic:
 
             episode += 1
             trajectories.append(trajectory)
-            after_steps = step
-            print(f"Episode {episode} length is:", after_steps - prior_steps)
+            episode_length = step - prior_step
+            print(f"Episode {episode} length is:", episode_length)
+            episode_lengths.append([prior_step, episode_length])
 
-        if len(trajectories) > 10:
-            self.plot_initial_behavior(trajectories)
+        # if len(trajectories) > 10:
+        #     self.plot_initial_behavior(trajectories)
+        #     self.plot_final_behavior(trajectories)
+
+        return np.array(episode_lengths)
 
     def plot_initial_behavior(self, trajectories):
         plt.figure(figsize=[8, 8])
@@ -163,27 +168,61 @@ class ActorCritic:
                 plt.plot(trajectory[i:i + 2, 1], trajectory[i:i + 2, 0], color=colormap(t),
                          alpha=alpha if alpha < 1 else 1)
                 alpha += alpha_step
-            # alpha = 1 / len(trajectory)
-            # for step in range(len(trajectory)):
-            #     line =
-            #     ax.plot()
 
         plt.xlim([self.env.MIN_DIM, self.env.MAX_DIM])
         plt.ylim([self.env.MIN_DIM, self.env.MAX_DIM])
         plt.show()
 
     def plot_final_behavior(self, trajectories):
-        pass
+        plt.figure(figsize=[8, 8])
+        colormap = plt.cm.get_cmap('hsv', 30)
+        for t in range(-30, 0):
+            trajectory = np.array(trajectories[t])
+            alpha_step = 1 / trajectory.shape[0]
+            alpha = 1 / trajectory.shape[0]
+            for i in range(trajectory.shape[0] - 1):
+                plt.plot(trajectory[i:i + 2, 1], trajectory[i:i + 2, 0], color=colormap(-t),
+                         alpha=alpha if alpha < 1 else 1)
+                alpha += alpha_step
 
-    def plot_learning_curves(self, episode_lenghts):
-        pass
+        plt.xlim([self.env.MIN_DIM, self.env.MAX_DIM])
+        plt.ylim([self.env.MIN_DIM, self.env.MAX_DIM])
+        plt.show()
+
+
+def plot_learning_curves(episode_lengths, first_part_length=20000):
+    # Plot first part
+    plt.figure(figsize=[8, 8])
+    seed = 0
+    for el in episode_lengths:
+        indices = np.where(el[:, 0] <= first_part_length)[0]
+        plt.plot(el[indices, 0], el[indices, 1], label=f'seed {seed}')
+        seed += 1
+    plt.xlabel("Number of time-steps")
+    plt.ylabel("Episode length")
+    plt.legend()
+    plt.show()
+
+    # plot second part
+    plt.figure(figsize=[8, 8])
+    seed = 0
+    for el in episode_lengths:
+        indices = np.where(el[:, 0] > first_part_length)[0]
+        plt.plot(el[indices, 0], el[indices, 1], label=f'seed {seed}')
+        seed += 1
+    plt.ylim([0, 100])
+    plt.xlabel("Number of time-steps")
+    plt.ylabel("Episode length")
+    plt.legend()
+    plt.show()
 
 
 if __name__ == '__main__':
     # TODO: numpy seed should stay the same while torch seeds should vary
     env = Environment()
     gamma = 1
-    num_steps = 30000
+    num_steps = 40000
+    num_seeds = 10
     hidden_dim = 10
     state_dim = 2
     action_dim = 9
@@ -199,6 +238,15 @@ if __name__ == '__main__':
     actor_lr = 1e-3
     critic_lr = 1e-3
 
+    # agent = ActorCritic(env, num_steps, gamma, state_dim, action_dim, hidden_dim, actor_lr, critic_lr, device)
+    # agent.train()
 
-    agent = ActorCritic(env, num_steps, gamma, state_dim, action_dim, hidden_dim, actor_lr, critic_lr, device)
-    agent.train()
+    episode_lengths = []
+    # numpy's random should be initialized once so that the environment has the same random seed among all the runs.
+    np.random.seed(0)
+    for seed in range(num_seeds):
+        torch.manual_seed(seed)
+        agent = ActorCritic(env, num_steps, gamma, state_dim, action_dim, hidden_dim, actor_lr, critic_lr, device)
+        episode_lengths.append(agent.train())
+
+    plot_learning_curves(episode_lengths, int(num_steps / 2))
