@@ -253,14 +253,14 @@ if __name__ == '__main__':
         agent.plot_initial_behavior(trajectories)
         agent.plot_final_behavior(trajectories)
 
-    # num_steps = 40000
-    # episode_lengths = []
-    # # numpy's random should be initialized once so that the environment has the same random seed among all the runs.
-    # np.random.seed(0)
-    # for seed in range(num_seeds):
-    #     torch.manual_seed(seed)
-    #     agent = ActorCritic(env, num_steps, gamma, state_dim, action_dim, hidden_dim, actor_lr, critic_lr, device)
-    #     episode_length, _ = agent.train()
-    #     episode_lengths.append(episode_length)
-    #
-    # plot_learning_curves(episode_lengths, int(num_steps / 2))
+    num_steps = 40000
+    episode_lengths = []
+    # numpy's random should be initialized once so that the environment has the same random seed among all the runs.
+    np.random.seed(0)
+    for seed in range(num_seeds):
+        torch.manual_seed(seed)
+        agent = ActorCritic(env, num_steps, gamma, state_dim, action_dim, hidden_dim, actor_lr, critic_lr, device)
+        episode_length, _ = agent.train()
+        episode_lengths.append(episode_length)
+
+    plot_learning_curves(episode_lengths, int(num_steps / 2))
