@@ -25,9 +25,9 @@ RIGHT-DOWN, DOWN, LEFT-DOWN, and STAY.
 the environmental state, changes by the following amounts, respectively: $[-B, 0]$, $[-B, +B]/\sqrt{2}$, 
 $[0, +B]$, $[+B, +B]/\sqrt{2}$, $[+B, 0]$, $[+B, -B]/\sqrt{2}$, $[0, -B]$, $[-B, -B]/\sqrt{2}$, $[0, 0]$. 
 One exception is when the position resulting from the action goes outside the arena, in which case the
-agent is kept within the arena by clipping the two components at the boundary. Here, $B =
-0.03$. Therefore, in most cases, $S’ = S + f(A)$, where $f$ is given by the above increments.
-- Termination: The episode terminates when the position after an action is in $[-0.2, +0.2]^2$.
+agent is kept within the arena by clipping the two components at the boundary. Here, $B = 0.03$.
+Therefore, in most cases, $S’ = S + f(A)$, where $f$ is given by the above increments.
+- **Termination:** The episode terminates when the position after an action is in $[-0.2, +0.2]^2$.
 - **Reward:** The reward is $-0.01$ every time step.
 - **Start state distribution:** The start state is chosen uniformly randomly from $[-1, +1]^2$.
 - **Discounting:** This task is undiscounted.
