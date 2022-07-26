@@ -166,15 +166,14 @@ class ActorCritic:
 
     def plot_initial_behavior(self, trajectories):
         plt.figure(figsize=[8, 8])
-        colormap = plt.cm.get_cmap('hsv', 10)
+        colormap = plt.cm.get_cmap('Dark2', 10)
         for t in range(10):
             trajectory = np.array(trajectories[t])
             alpha_step = 1 / trajectory.shape[0]
             alpha = 1 / trajectory.shape[0]
-
             for i in range(trajectory.shape[0] - 1):
                 plt.plot(trajectory[i:i + 2, 1], trajectory[i:i + 2, 0], color=colormap(t),
-                         alpha=np.exp(alpha) if np.exp(alpha) < 1 else 1)
+                         alpha=alpha if alpha < 1 else 1)
                 alpha += alpha_step
 
         plt.xlim([self.env.MIN_DIM, self.env.MAX_DIM])
@@ -186,7 +185,7 @@ class ActorCritic:
 
     def plot_final_behavior(self, trajectories):
         plt.figure(figsize=[8, 8])
-        colormap = plt.cm.get_cmap('hsv', 30)
+        colormap = plt.cm.get_cmap('Dark2', 30)
         for t in range(-30, 0):
             trajectory = np.array(trajectories[t])
             alpha_step = 1 / trajectory.shape[0]
@@ -262,14 +261,14 @@ if __name__ == '__main__':
         agent.plot_initial_behavior(trajectories)
         agent.plot_final_behavior(trajectories)
 
-    num_steps = 40000
-    episode_lengths = []
-    # numpy's random should be initialized once so that the environment has the same random seed among all the runs.
-    np.random.seed(0)
-    for seed in range(num_seeds):
-        torch.manual_seed(seed)
-        agent = ActorCritic(env, num_steps, gamma, state_dim, action_dim, hidden_dim, actor_lr, critic_lr, device)
-        episode_length, _ = agent.train()
-        episode_lengths.append(episode_length)
-
-    plot_learning_curves(episode_lengths, int(num_steps / 2))
+    # num_steps = 40000
+    # episode_lengths = []
+    # # numpy's random should be initialized once so that the environment has the same random seed among all the runs.
+    # np.random.seed(0)
+    # for seed in range(num_seeds):
+    #     torch.manual_seed(seed)
+    #     agent = ActorCritic(env, num_steps, gamma, state_dim, action_dim, hidden_dim, actor_lr, critic_lr, device)
+    #     episode_length, _ = agent.train()
+    #     episode_lengths.append(episode_length)
+    #
+    # plot_learning_curves(episode_lengths, int(num_steps / 2))

@@ -32,3 +32,6 @@ Therefore, in most cases, $S’ = S + f(A)$, where $f$ is given by the above inc
 - **Start state distribution:** The start state is chosen uniformly randomly from $[-1, +1]^2$.
 - **Discounting:** This task is undiscounted.
 
+The agent is the same as the one-step Actor-Critic from Section 13.5 of the [Reinforcement Learning book (Sutton &
+Barto 2020)](http://incompleteideas.net/book/RLbook2020.pdf). 
+
