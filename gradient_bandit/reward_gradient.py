@@ -42,7 +42,7 @@ for t in range(T):
     dist = tor.distributions.Normal(0, 1)
     zeta = dist.sample()
     A = mu + sigma * zeta
-    # R = torch.distributions.Normal(-tor.norm(A - astar) ** 2, 1).sample()
+    # R = torch.distributions.Normal(-tor.norm(A - astar) ** gradient_bandit, 1).sample()
     R = -tor.norm(A - astar) ** 2 + tor.randn(1)
 
     # Compute loss
@@ -65,7 +65,7 @@ for t in range(T):
     dist = tor.distributions.Normal(0, 1)
     zeta = dist.sample()
     A = mu + sigma * zeta
-    # R = torch.distributions.Normal(-tor.norm(A - astar) ** 2, 1).sample()
+    # R = torch.distributions.Normal(-tor.norm(A - astar) ** gradient_bandit, 1).sample()
     R = -tor.norm(A - astar) ** 2 + tor.randn(1)
 
     # Compute loss
