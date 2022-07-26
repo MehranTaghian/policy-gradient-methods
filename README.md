@@ -9,4 +9,4 @@ where the policy is parametrized by $\theta = [\mu, \sigma^2]^\top$ and $\mu \in
 $\sigma^2 \in \mathbb{R}^+$. 
 
 The environment provides a reward sampled from another normal distribution 
-$R\sim\mathcal{N}\left(-(A - a^*)^2, 1\right)$ where $a^*$ is the value of the optimal arm.
+$R\sim\mathcal{N}\left(-(A - a^\*)^2, 1\right)$ where $a^\*$ is the value of the optimal arm.
