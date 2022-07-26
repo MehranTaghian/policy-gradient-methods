@@ -84,13 +84,33 @@ for t in range(T):
 
 grad_mean_mus = np.cumsum(grad_mus.numpy()) / np.arange(1, T + 1, 1)
 grad_mean_sigmas = np.cumsum(grad_sigmas.numpy()) / np.arange(1, T + 1, 1)
+
+plt.figure()
 plt.plot(mus)
+plt.title('Leaned $\mu$ over 10000 trials')
+plt.xlabel('Trial')
+plt.ylabel('$\mu$')
+
 plt.figure()
 plt.plot(sigmas)
+plt.title('Leaned $\sigma$ over 10000 trials')
+plt.xlabel('Trial')
+plt.ylabel('$\sigma$')
+
 plt.figure()
-plt.plot([0, T], [true_grad_mean] * 2, linestyle="--", alpha=0.5, linewidth=3)
-plt.plot(grad_mean_mus)
+plt.plot([0, T], [true_grad_mean] * 2, linestyle="--", alpha=0.5, linewidth=3, label='True derivative')
+plt.plot(grad_mean_mus, label='Estimated derivative')
+plt.title('Sample avg estimate of the derivative and the true derivative')
+plt.xlabel('Trial')
+plt.ylabel('$\\frac{\partial J(\\theta)}{\partial \mu}$')
+plt.legend()
+
 plt.figure()
-plt.plot([0, T], [true_grad_sigma] * 2, linestyle="--", alpha=0.5, linewidth=3)
-plt.plot(grad_mean_sigmas)
+plt.plot([0, T], [true_grad_sigma] * 2, linestyle="--", alpha=0.5, linewidth=3, label='True derivative')
+plt.plot(grad_mean_sigmas, label='Estimated derivative')
+plt.title('Sample avg estimate of the derivative and the true derivative')
+plt.xlabel('Trial')
+plt.ylabel('$\\frac{\partial J(\\theta)}{\partial \log(\sigma^2)}$')
+plt.legend()
+
 plt.show()

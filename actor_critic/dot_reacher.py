@@ -5,9 +5,10 @@ import torch.nn.functional as F
 from torch import optim
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import os
 
-
-# Environment
+if not os.path.exists('./image'):
+    os.makedirs('./image')
 
 class Environment:
     def __init__(self, b=0.03):
@@ -150,7 +151,7 @@ class ActorCritic:
             episode += 1
             trajectories.append(trajectory)
             episode_length = step - prior_step
-            print(f"Episode {episode} length is:", episode_length)
+            # print(f"Episode {episode} length is:", episode_length)
             episode_lengths.append([prior_step, episode_length])
             if limit_num_episode is None:
                 # update per number of steps
@@ -179,6 +180,8 @@ class ActorCritic:
         plt.xlim([self.env.MIN_DIM, self.env.MAX_DIM])
         plt.ylim([self.env.MIN_DIM, self.env.MAX_DIM])
         plt.grid(axis='both', color='gray')
+        plt.title('Initial behaviors of the agent')
+        plt.savefig(os.path.join('./image', 'initial.jpg'), dpi=300)
         plt.show()
 
     def plot_final_behavior(self, trajectories):
@@ -196,6 +199,8 @@ class ActorCritic:
         plt.xlim([self.env.MIN_DIM, self.env.MAX_DIM])
         plt.ylim([self.env.MIN_DIM, self.env.MAX_DIM])
         plt.grid(axis='both', color='gray')
+        plt.title('Final behaviors of the agent')
+        plt.savefig(os.path.join('./image', 'final.jpg'), dpi=300)
         plt.show()
 
 
@@ -207,10 +212,12 @@ def plot_learning_curves(episode_lengths, first_part_length):
         indices = np.where(el[:, 0] <= first_part_length)[0]
         plt.plot(el[indices, 0], el[indices, 1], label=f'seed {seed}')
         seed += 1
+    plt.title('Learning curves for the first 20000 steps')
     plt.xlabel("Number of time-steps")
     plt.ylabel("Episode length")
     plt.grid(axis='both', color='gray')
     plt.legend()
+    plt.savefig(os.path.join('./image', 'first.jpg'), dpi=300)
     plt.show()
 
     # plot second part
@@ -221,10 +228,12 @@ def plot_learning_curves(episode_lengths, first_part_length):
         plt.plot(el[indices, 0], el[indices, 1], label=f'seed {seed}')
         seed += 1
     plt.ylim([0, 100])
+    plt.title('Learning curves for the last 20000 steps')
     plt.xlabel("Number of time-steps")
     plt.ylabel("Episode length")
     plt.grid(axis='both', color='gray')
     plt.legend()
+    plt.savefig(os.path.join('./image', 'last.jpg'), dpi=300)
     plt.show()
 
 
