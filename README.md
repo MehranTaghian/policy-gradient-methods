@@ -38,6 +38,8 @@ Barto 2020)](http://incompleteideas.net/book/RLbook2020.pdf).
 The trajectories the agent took during the first 10 episodes of training is depicted in the following figure. Note that a trajectory is represented by a curve of a particular color (some share the same
 color), and the earlier part of each trajectory has a lighter shade of that color.
 
+           Solarized dark             |           Solarized Ocean
+:------------------------------------:|:-----------------------------------:
 ![](./actor_critic/image/initial.jpg) | ![](./actor_critic/image/final.jpg)
 
 
