@@ -35,3 +35,13 @@ Therefore, in most cases, $S’ = S + f(A)$, where $f$ is given by the above inc
 The agent is the same as the one-step Actor-Critic from Section 13.5 of the [Reinforcement Learning book (Sutton &
 Barto 2020)](http://incompleteideas.net/book/RLbook2020.pdf). 
 
+The trajectories the agent took during the first 10 episodes of training is depicted in the following figure. Note that a trajectory is represented by a curve of a particular color (some share the same
+color), and the earlier part of each trajectory has a lighter shade of that color.
+
+![](./actor_critic/image/initial.jpg) | ![](./actor_critic/image/final.jpg)
+
+
+And the trajectories of the agent during the final behaviors represented in the following figure.
+
+
+
