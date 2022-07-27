@@ -35,15 +35,35 @@ Therefore, in most cases, $S’ = S + f(A)$, where $f$ is given by the above inc
 The agent is the same as the one-step Actor-Critic from Section 13.5 of the [Reinforcement Learning book (Sutton &
 Barto 2020)](http://incompleteideas.net/book/RLbook2020.pdf). 
 
-The trajectories the agent took during the first 10 episodes of training is depicted in the following figure. Note that a trajectory is represented by a curve of a particular color (some share the same
+The trajectories the agent took during the first 10 episodes of training is depicted in the figure on the left. Note that a 
+trajectory is represented by a curve of a particular color (some share the same
 color), and the earlier part of each trajectory has a lighter shade of that color.
+The trajectories of the agent during the final behaviors represented in the figure on the right.
 
-           Solarized dark             |           Solarized Ocean
-:------------------------------------:|:-----------------------------------:
-![](./actor_critic/image/initial.jpg) | ![](./actor_critic/image/final.jpg)
+<img src="./actor_critic/image/initial.jpg" alt="drawing" width="49%"/>
+<img src="./actor_critic/image/final.jpg" alt="drawing" width="49%"/>
+
+### Online Supervised Learning
+In this section, an online learning algorithm is used to train on MNIST task. Samples arrive one at a time and 
+evaluation happens right away. Here, we have implemented three types of algorithms for online learning:
+- **Incremental:** In this method, the learning update happens every time-step in a fully incremental manner with no 
+samples stored.
+- **Batch Learning:** In this method, we have a memory to store samples and perform mini-batch updates. Each sample arrives
+will be stored into the memory. Then a mini-batch of samples would be selected randomly from the memory to perform the update.
+The general form of the algorithm is as follows:
+```
+batch_learning(buffer, $\theta$, E, N, M):  
+    For epoch from 1 to E:
+        Shuffle samples in the buffer
+        Slice buffer into N mini-batches
+        
+        For mini-batch from 1 to M:  # M <= N
+            Update $\theta$ using the mini-batch
+    Return $\theta$
+```
+- **Batch Learning with Normalization:** 
 
 
-And the trajectories of the agent during the final behaviors represented in the following figure.
 
 
 

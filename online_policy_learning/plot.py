@@ -4,7 +4,7 @@ import os
 
 experiments = ['ppo', 'reinforce']
 
-PLOT_DIR = './plots'
+PLOT_DIR = 'plots'
 if not os.path.exists(PLOT_DIR):
     os.makedirs(PLOT_DIR)
 

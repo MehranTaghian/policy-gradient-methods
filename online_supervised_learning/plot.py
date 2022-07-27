@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-experiments = ['batch', 'incremental', 'my']
+experiments = ['batch', 'incremental', 'batchnorm']
 
-PLOT_DIR = './plots'
+PLOT_DIR = 'plots'
 if not os.path.exists(PLOT_DIR):
     os.makedirs(PLOT_DIR)
 
@@ -33,7 +33,7 @@ def individual_plot(seeds=10):
         ax.grid(which='major', alpha=0.5)
 
         for i in range(seeds):
-            result = np.loadtxt(f'{e}{i}.txt')
+            result = np.loadtxt(os.path.join('results', f'{e}{i}.txt'))
             ax.plot(result[0], result[1], label=i)
 
         ax.set_xlabel("Number of images processed")
@@ -69,7 +69,7 @@ def total_plot(seeds=10):
         returns = []
         time_steps = None
         for i in range(seeds):
-            seed_return = np.loadtxt(f'{e}{i}.txt')
+            seed_return = np.loadtxt(os.path.join('results', f'{e}{i}.txt'))
             if time_steps is None:
                 time_steps = seed_return[0]
             returns.append(seed_return[1])

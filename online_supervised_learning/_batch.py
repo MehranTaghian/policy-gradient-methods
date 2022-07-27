@@ -11,8 +11,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from utils import Buffer
+import os
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+if os.path.exists('results'):
+    os.makedirs('results')
 
 
 class Network(nn.Module):
@@ -111,7 +115,7 @@ def main():
     data = np.zeros((2, len(errors)))
     data[0] = range(checkpoint, 60000 + 1, checkpoint)
     data[1] = errors
-    np.savetxt(name + str(seed) + ".txt", data)
+    np.savetxt(os.path.join('results', name + str(seed) + ".txt"), data)
     plt.show()
 
 
