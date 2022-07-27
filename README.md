@@ -40,8 +40,8 @@ trajectory is represented by a curve of a particular color (some share the same
 color), and the earlier part of each trajectory has a lighter shade of that color.
 The trajectories of the agent during the final behaviors represented in the figure on the right.
 
-<img src="./actor_critic/image/initial.jpg" alt="drawing" width="49%"/>
-<img src="./actor_critic/image/final.jpg" alt="drawing" width="49%"/>
+<img src="./actor_critic/image/initial.jpg" alt="drawing" width="45%"/>
+<img src="./actor_critic/image/final.jpg" alt="drawing" width="45%"/>
 
 ### Online Supervised Learning
 In this section, an online learning algorithm is used to train on MNIST task. Samples arrive one at a time and 
@@ -52,14 +52,14 @@ samples stored.
 will be stored into the memory. Then a mini-batch of samples would be selected randomly from the memory to perform the update.
 The general form of the algorithm is as follows:
 ```
-batch_learning(buffer, $\theta$, E, N, M):  
+batch_learning(buffer, theta, E, N, M):  
     For epoch from 1 to E:
         Shuffle samples in the buffer
         Slice buffer into N mini-batches
         
         For mini-batch from 1 to M:  # M <= N
-            Update $\theta$ using the mini-batch
-    Return $\theta$
+            Update theta using the mini-batch
+    Return theta
 ```
 - **Batch Learning with Normalization:** 
 
