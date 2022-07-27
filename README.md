@@ -70,8 +70,7 @@ The learning curves of these three methods are depicted in the following figure.
 ### Online Policy Learning
 In this section, we implemented batch Reinforce and PPO. The batch Reinforce algorithm is as follows:
 
-```
-{.algorithm}
+```{.algorithm}
 % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
 \begin{algorithm}
 \caption{Quicksort}
