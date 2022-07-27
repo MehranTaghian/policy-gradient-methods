@@ -43,7 +43,7 @@ The trajectories of the agent during the final behaviors represented in the figu
 <img src="./actor_critic/image/initial.jpg" alt="drawing" width="49%"/><img src="./actor_critic/image/final.jpg" alt="drawing" width="49%"/>
 
 ### Online Supervised Learning
-In this section, an online learning algorithm is used to train on MNIST task. Samples arrive one at a time and 
+In this section under `online_supervised_learning` directory, an online learning algorithm is used to train on MNIST task. Samples arrive one at a time and 
 evaluation happens right away. Here, we have implemented three types of algorithms for online learning:
 - **Incremental:** In this method, the learning update happens every time-step in a fully incremental manner with no 
 samples stored.
@@ -68,35 +68,14 @@ The learning curves of these three methods are depicted in the following figure.
 <img src="./online_supervised_learning/plots/total_result.jpg">
 
 ### Online Policy Learning
-In this section, we implemented batch Reinforce and PPO. The batch Reinforce algorithm is as follows:
+In this section under `online_policy_learning` directory, we implemented batch REINFORCE (section 13.3 and 13.4 of the [RL book](http://incompleteideas.net/book/RLbook2020.pdf))
+and [PPO](https://arxiv.org/pdf/1707.06347.pdf). The environment used is CartPole-v1. Both of these algorithms 
+run for 10 seeds. The average and standard error of the cumulative reward is depicted in the following plot:
 
-```{.algorithm}
-% This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
-\begin{algorithm}
-\caption{Quicksort}
-\begin{algorithmic}
-\PROCEDURE{Quicksort}{$A, p, r$}
-    \IF{$p < r$} 
-        \STATE $q = $ \CALL{Partition}{$A, p, r$}
-        \STATE \CALL{Quicksort}{$A, p, q - 1$}
-        \STATE \CALL{Quicksort}{$A, q + 1, r$}
-    \ENDIF
-\ENDPROCEDURE
-\PROCEDURE{Partition}{$A, p, r$}
-    \STATE $x = A[r]$
-    \STATE $i = p - 1$
-    \FOR{$j = p$ \TO $r - 1$}
-        \IF{$A[j] < x$}
-            \STATE $i = i + 1$
-            \STATE exchange
-            $A[i]$ with $A[j]$
-        \ENDIF
-        \STATE exchange $A[i]$ with $A[r]$
-    \ENDFOR
-\ENDPROCEDURE
-\end{algorithmic}
-\end{algorithm}
-```
+<img src="./online_policy_learning/plots/total_result.jpg">
+
+
+
 
 
 

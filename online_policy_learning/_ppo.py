@@ -7,8 +7,12 @@ import gym
 import torch
 import torch.nn as nn
 from torch.distributions import Categorical
+import os
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+if os.path.exists('results'):
+    os.makedirs('results')
 
 
 class Memory:
@@ -271,7 +275,7 @@ def main():
     data = np.zeros((2, len(avgrets)))
     data[0] = range(checkpoint, num_steps + 1, checkpoint)
     data[1] = avgrets
-    np.savetxt(name + str(seed) + ".txt", data)
+    np.savetxt(os.path.join('results', name + str(seed) + ".txt"), data)
     plt.show()
 
 
