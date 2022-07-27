@@ -40,8 +40,7 @@ trajectory is represented by a curve of a particular color (some share the same
 color), and the earlier part of each trajectory has a lighter shade of that color.
 The trajectories of the agent during the final behaviors represented in the figure on the right.
 
-<img src="./actor_critic/image/initial.jpg" alt="drawing" width="45%"/>
-<img src="./actor_critic/image/final.jpg" alt="drawing" width="45%"/>
+<img src="./actor_critic/image/initial.jpg" alt="drawing" width="45%"/><img src="./actor_critic/image/final.jpg" alt="drawing" width="45%"/>
 
 ### Online Supervised Learning
 In this section, an online learning algorithm is used to train on MNIST task. Samples arrive one at a time and 
